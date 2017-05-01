@@ -1,5 +1,5 @@
 projectKey=charu1
 serverUrl=http://34.209.225.119:10000
 dashboardUrl=http://34.209.225.119:10000/dashboard/index/charu1
-ceTaskId=AVvFHyb7UiUi9OgJH9Uc
-ceTaskUrl=http://34.209.225.119:10000/api/ce/task?id=AVvFHyb7UiUi9OgJH9Uc
+ceTaskId=AVvFIhYnUiUi9OgJH9Ud
+ceTaskUrl=http://34.209.225.119:10000/api/ce/task?id=AVvFIhYnUiUi9OgJH9Ud

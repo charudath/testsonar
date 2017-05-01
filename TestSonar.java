@@ -296,7 +296,9 @@ public class TestSonar {
 	        }
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//comment this out
+			Logger.getGlobal().fine(e.getLocalizedMessage());
+			//e.printStackTrace();
 			throw e;
 
 		}
