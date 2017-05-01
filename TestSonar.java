@@ -6,15 +6,20 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
+import org.apache.commons.logging.Log;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
+import sun.util.logging.resources.logging;
+
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.cloudfront_2012_03_15.model.transform.LoggingConfigStaxUnmarshaller;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
@@ -98,14 +103,17 @@ public class TestSonar {
 					String name = "";
 					List<Tag> tags = instance.getTags();
 					for (Tag tag : tags) {
-					if(tag.getKey().equals("Name")){
+					if("Name".equals(tag.getKey())){
 						name = tag.getValue();
 					}
 					}
 					String reasonState= "";
 					try{
 						reasonState= instance.getStateReason().getMessage();
-					}catch(Exception e){}
+					}catch(Exception e){
+						//comment this out
+						Logger.getGlobal().fine(e.getLocalizedMessage());
+					}
 
 
 
@@ -294,3 +302,10 @@ public class TestSonar {
 		}
 	}
 }
+
+/*
+git add *
+git commit -m "comment"
+git push
+E:\programs\sonar-scanner-3.0.1.733-windows\bin\sonar-scanner.bat
+*/
