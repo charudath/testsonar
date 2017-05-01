@@ -30,9 +30,9 @@ import com.amazonaws.services.ec2.model.VolumeAttachment;
 
 public class TestSonar {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		try {
-			
+
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Assets");
 			Row row0 = sheet.createRow(0);
@@ -45,7 +45,11 @@ public class TestSonar {
 			row0.createCell(6).setCellValue("Last Action Time");
 			row0.createCell(7).setCellValue("Last Action Reason");
 			//devvm
-			AWSCredentials credentials = new BasicAWSCredentials("Hashed", "Hashed");
+			//AWSCredentials credentials = new BasicAWSCredentials("Hashed", "Hashed");
+			String user = "Hashed";
+			String pass="Hashed";
+			AWSCredentials credentials = new BasicAWSCredentials(user,pass);
+
 			ClientConfiguration config = new ClientConfiguration();
 			config.setMaxErrorRetry(15);
 			config.setUseGzip(true);
@@ -55,11 +59,11 @@ public class TestSonar {
 			int rowNum = 1;
 			int sDec=0,rDec=0,sJan=0,rJan=0,sFeb=0,rFeb=0,sMar=0,rMar=0,sApr=0,rApr=0,sMay=0,rMay=0,sJun=0,rJun=0,sJul=0,rJul=0,sAug=0,rAug=0
 					,sSep=0,rSep=0,sOct=0,rOct=0,sNov=0,rNov=0;
-			
+
 			for (Region region : regions) {
-			
+
 			ec2.setEndpoint(region.getEndpoint());
-			
+
 			Hashtable<String, String> vols = new Hashtable<String, String>();
 			List<Volume> volumes = ec2.describeVolumes().getVolumes();
 			for (Iterator iterator = volumes.iterator(); iterator.hasNext();) {
@@ -81,16 +85,16 @@ public class TestSonar {
 				//vols.put(instanceId, volumeId+" ^ "+VolumeSize+" ^ "+attachTime+" ^ "+attachDev+" ^ ");
 				vols.put(instanceId, attachTime);
 			}
-			
+
 			DescribeInstancesResult result = ec2.describeInstances();
 			List<Reservation> reservations = result.getReservations();
-			
+
 			for (Reservation reservation : reservations) {
 				for (Instance instance : reservation.getInstances()) {
 					GetConsoleOutputRequest getConsoleOutputRequest = new GetConsoleOutputRequest();
 					getConsoleOutputRequest.setInstanceId(instance.getInstanceId());
 					GetConsoleOutputResult consoleOutput = ec2.getConsoleOutput(getConsoleOutputRequest );
-					
+
 					String name = "";
 					List<Tag> tags = instance.getTags();
 					for (Tag tag : tags) {
@@ -100,11 +104,11 @@ public class TestSonar {
 					}
 					String reasonState= "";
 					try{
-						reasonState= instance.getStateReason().getMessage();	
+						reasonState= instance.getStateReason().getMessage();
 					}catch(Exception e){}
-					
-					
-					
+
+
+
 					//calculation before Jan
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 0, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -113,7 +117,7 @@ public class TestSonar {
 							sDec++;
 						}
 					}
-					
+
 					//calculation before Feb
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 1, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -122,7 +126,7 @@ public class TestSonar {
 							sJan++;
 						}
 					}
-					
+
 					//calculation before Mar
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 2, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -139,7 +143,7 @@ public class TestSonar {
 							sMar++;
 						}
 					}
-					
+
 					//calculation before May
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 5, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -148,7 +152,7 @@ public class TestSonar {
 							sApr++;
 						}
 					}
-					
+
 					//calculation before June
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 6, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -157,7 +161,7 @@ public class TestSonar {
 							sMay++;
 						}
 					}
-					
+
 					//calculation before Jul
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 7, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -166,7 +170,7 @@ public class TestSonar {
 							sJun++;
 						}
 					}
-					
+
 					//calculation before Aug
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 8, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -184,7 +188,7 @@ public class TestSonar {
 							sAug++;
 						}
 					}
-					
+
 					//calculation before Oct
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 10, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -193,7 +197,7 @@ public class TestSonar {
 							sSep++;
 						}
 					}
-					
+
 					//calculation before Nov
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 11, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -202,7 +206,7 @@ public class TestSonar {
 							sOct++;
 						}
 					}
-					
+
 					//calculation before Dec
 					if(consoleOutput.getTimestamp().compareTo(new Date(2016-1900, 12, 1)) < 0){
 						if("running".equals(instance.getState().getName())){
@@ -212,10 +216,10 @@ public class TestSonar {
 						}
 					}
 
-					
+
 					System.out.println(region.getRegionName() + " ~ "+ instance.getInstanceId()+ " ~ "+instance.getState().getName()+" ~ "
 				+name+" ~ "+vols.get(instance.getInstanceId()) + " ~ "+ consoleOutput.getTimestamp().toGMTString()+" ~ "+reasonState );
-					
+
 					Row row = sheet.createRow(rowNum);
 					rowNum++;
 					row.createCell(0).setCellValue(region.getRegionName());
@@ -229,7 +233,7 @@ public class TestSonar {
 				}
 			}
 		}
-			
+
 			Row row = sheet.createRow(rowNum);
 			rowNum++;
 			row.createCell(0).setCellValue("Month");
@@ -245,7 +249,7 @@ public class TestSonar {
 			row.createCell(10).setCellValue("Sep");
 			row.createCell(11).setCellValue("Oct");
 			row.createCell(12).setCellValue("Nov");
-			
+
 			row = sheet.createRow(rowNum);
 			rowNum++;
 			row.createCell(0).setCellValue("stopped");
@@ -261,7 +265,7 @@ public class TestSonar {
 			row.createCell(10).setCellValue(sSep);
 			row.createCell(11).setCellValue(sOct);
 			row.createCell(12).setCellValue(sNov);
-			
+
 			row = sheet.createRow(rowNum);
 			rowNum++;
 			row.createCell(0).setCellValue("running");
@@ -277,14 +281,16 @@ public class TestSonar {
 			row.createCell(10).setCellValue(rSep);
 			row.createCell(11).setCellValue(rOct);
 			row.createCell(12).setCellValue(rNov);
-			
-			
+
+
 			try (FileOutputStream outputStream = new FileOutputStream("E:/DevVM-All Nov 22-Summary.xls")) {
 	            workbook.write(outputStream);
 	        }
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
+
 		}
 	}
 }
